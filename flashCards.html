@@ -1,0 +1,54 @@
+<html>
+
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@7.12.15/dist/sweetalert2.all.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="animate.css">
+    <style>
+        body {
+            font-family: "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", Helvetica, Arial, sans-serif;
+        }
+    </style>
+</head>
+
+<body>
+    <button id="startFlashCardsBtn">Start Flash Cards</button>
+
+    <script>
+        $('#startFlashCardsBtn').click(function() {
+            $.getJSON("questions.json", function(result) {
+                $.each(result, function(i, field) {
+                    // swal({
+                    //     title: field.category,
+                    //     text: field.question,
+                    //     animation: false,
+                    //     customClass: 'animated flipInX'
+                    // }).then((result) => {
+                    //     swal({
+                    //         title: field.answer,
+                    //         animation: false,
+                    //         customClass: 'animated flipInX',
+                    //     });
+                    // });
+                    doSWAL(field);
+                });
+            });
+        });
+
+        async function doSWAL(aQuestionObject) {
+            let result = await swal({
+                title: aQuestionObject.category,
+                text: aQuestionObject.question,
+                animation: false,
+                customClass: 'animated flipInX'
+            });
+            let result2 = await swal({
+                title: aQuestionObject.answer,
+                animation: false,
+                customClass: 'animated flipInX',
+            });
+        }
+    </script>
+</body>
+
+</html>

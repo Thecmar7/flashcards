@@ -1,0 +1,16 @@
+[{
+        "category": "Family",
+        "question": "When is my Birthday?",
+        "answer": "June 11, 1993"
+    },
+    {
+        "category": "CSS",
+        "question": "How do you crop a image to fit a defined height and width?",
+        "answer": "object-fit: cover; width:230px; height:230px;"
+    },
+    {
+        "category": "HTML",
+        "question": "What is the syntax for importing a stylesheet?",
+        "answer": "rel=\"stylesheet\" type=\"text/css\" href=\"animate.css\">"
+    }
+]
