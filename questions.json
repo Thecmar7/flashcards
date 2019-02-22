@@ -11,6 +11,6 @@
     {
         "category": "HTML",
         "question": "What is the syntax for importing a stylesheet?",
-        "answer": "rel=\"stylesheet\" type=\"text/css\" href=\"animate.css\">"
+        "answer": "<link rel=\"stylesheet\" type=\"text/css\" href=\"animate.css\">"
     }
 ]

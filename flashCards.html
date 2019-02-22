@@ -13,37 +13,62 @@
 
 <body>
     <button id="startFlashCardsBtn">Start Flash Cards</button>
+    <button id="randomFlashBtn">Random Flash Card</button>
 
     <script>
-        $('#startFlashCardsBtn').click(function() {
-            $.getJSON("questions.json", function(result) {
+        /*
+         *
+         */
+        function setUpQuestionsSet(questionJSON) {
+            var questionSet = new Set();
+            $.getJSON(questionJSON, function(result) {
                 $.each(result, function(i, field) {
-                    // swal({
-                    //     title: field.category,
-                    //     text: field.question,
-                    //     animation: false,
-                    //     customClass: 'animated flipInX'
-                    // }).then((result) => {
-                    //     swal({
-                    //         title: field.answer,
-                    //         animation: false,
-                    //         customClass: 'animated flipInX',
-                    //     });
-                    // });
-                    doSWAL(field);
+                    questionSet.add(field);
                 });
             });
-        });
+            return questionSet;
+        }
+
+        /*
+         *
+         */
+        function randomValueFromSet(set) {
+            let questionArray = Array.from(set);
+            return questionArray[Math.floor(Math.random() * questionArray.length)];
+        }
+
+        /*
+         *
+         */
+        function randomQuestion(set) {
+            aQuestion = randomValueFromSet(set);
+            doSWAL(aQuestion);
+        }
+
+        /*
+         *
+         */
+        window.onload = function() {
+            var questionSet = setUpQuestionsSet("questions.json");
+
+            // set up the user events
+            $('#randomFlashBtn').click(function() {
+                randomQuestion(questionSet);
+            });
+        }
 
         async function doSWAL(aQuestionObject) {
             let result = await swal({
-                title: aQuestionObject.category,
+
+                title: "Question:" + aQuestionObject.category,
                 text: aQuestionObject.question,
                 animation: false,
                 customClass: 'animated flipInX'
             });
             let result2 = await swal({
-                title: aQuestionObject.answer,
+
+                title: "Answer:",
+                text: aQuestionObject.answer,
                 animation: false,
                 customClass: 'animated flipInX',
             });
