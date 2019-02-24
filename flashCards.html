@@ -12,8 +12,9 @@
 </head>
 
 <body>
-    <button id="startFlashCardsBtn">Start Flash Cards</button>
+    <!-- <button id="startFlashCardsBtn">Start Flash Cards</button> -->
     <button id="randomFlashBtn">Random Flash Card</button>
+    <button id="randomFlashBtn2">2 Random Flash Card</button>
 
     <script>
         /*
@@ -49,29 +50,100 @@
          *
          */
         window.onload = function() {
-            var questionSet = setUpQuestionsSet("questions.json");
+            var questionSet = setUpQuestionsSet(" questions.json ");
 
             // set up the user events
             $('#randomFlashBtn').click(function() {
                 randomQuestion(questionSet);
             });
+
+            $('#randomFlashBtn2').click(function() {
+                randomQuestion(questionSet).then(function() {
+                    randomQuestion(questionSet);
+                });
+            });
+
         }
 
-        async function doSWAL(aQuestionObject) {
+        async function doSWAL(aQuestion) {
             let result = await swal({
 
-                title: "Question:" + aQuestionObject.category,
-                text: aQuestionObject.question,
+                title: "Question: " + aQuestion.category,
+                text: aQuestion.question,
                 animation: false,
                 customClass: 'animated flipInX'
             });
             let result2 = await swal({
 
-                title: "Answer:",
-                text: aQuestionObject.answer,
+                title: "Answer: ",
+                text: aQuestion.answer,
                 animation: false,
                 customClass: 'animated flipInX',
             });
+        }
+
+        async function doSwalChain(aQuestion) {
+            aQuestion
+
+            Swal.fire({
+                title: 'Submit your Github username',
+                input: 'text',
+                inputAttributes: {
+                    autocapitalize: 'off'
+                },
+                showCancelButton: true,
+                confirmButtonText: 'Look up',
+                showLoaderOnConfirm: true,
+                preConfirm: (login) => {
+                    return fetch(`//api.github.com/users/${login}`)
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error(response.statusText)
+                            }
+                            return response.json()
+                        })
+                        .catch(error => {
+                            Swal.showValidationMessage(
+                                `Request failed: ${error}`
+                            )
+                        })
+                },
+                allowOutsideClick: () => !Swal.isLoading()
+            }).then((result) => {
+                if (result.value) {
+                    Swal.fire({
+                        title: `${result.value.login}'s avatar`,
+                        imageUrl: result.value.avatar_url
+                    })
+                }
+            })
+        }
+
+        async function doSwalQueue(questionArray) {
+            // TODO: get the progressSteps array 
+            // TODO: Create the queue
+            Swal.mixin({
+                input: 'text',
+                confirmButtonText: 'Next &rarr;',
+                showCancelButton: true,
+                progressSteps: ['1', '2', '3']
+            }).queue([{
+                    title: 'Question 1',
+                    text: 'Chaining swal2 modals is easy'
+                },
+                'Question 2',
+                'Question 3'
+            ]).then((result) => {
+                if (result.value) {
+                    Swal.fire({
+                        title: 'All done!',
+                        html: 'Your answers: <pre><code>' +
+                            JSON.stringify(result.value) +
+                            '</code></pre>',
+                        confirmButtonText: 'Lovely!'
+                    })
+                }
+            })
         }
     </script>
 </body>
